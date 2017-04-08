@@ -70,7 +70,7 @@ class SDStruct
     opt = {
       camelize_keys: false,
       exclude_blank_values: false,
-      exclude_values: []
+      values_to_exclude: []
     }.merge(opt)
 
     @table.map do |k, v|
@@ -79,14 +79,14 @@ class SDStruct
       [k, v]
     end.original_to_h
        .select{|_,v| opt[:exclude_blank_values] ? v.present? : !v.nil? }
-       .select{|_,v| !v.in?(opt[:exclude_values]) }
+       .select{|_,v| !v.in?(opt[:values_to_exclude]) }
   end
 
   def to_json(opt = {})
     opt = {
       camelize_keys: true,
       exclude_blank_values: true,
-      exclude_values: [0, [""], [{}]]
+      values_to_exclude: [0, [""], [{}]]
     }.merge(opt)
 
     to_h(opt).to_json
@@ -163,10 +163,10 @@ class SDStruct
 
   def find(key_str, opt = {})
     opt = {
-      delimiter: "/"
+      separator: "/"
     }.merge(opt)
 
-    args = key_str.split(opt[:delimiter])
+    args = key_str.split(opt[:separator])
                   .map do |x|
                     x.strip!
                     if !!(x =~ /\A[-+]?\d+\z/)
