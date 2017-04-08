@@ -27,7 +27,9 @@ Example of a response body in JSON.
 }
 ```
 
-#### In OpenStruct, it's not obvious how to get a value with fields that contain spaces. Some people don't even know that it can be accessed.
+
+> In OpenStruct, it's not obvious how to get a value with fields that contain spaces.
+> Some people don't even know that it can be accessed.
 
 ```ruby
 ## with OpenStruct
@@ -48,7 +50,8 @@ sd_struct["two words"]
 # => "Foo bar"
 ```
 
-#### OpenStruct's `to_h` doesn't return a hash deeply.
+
+> OpenStruct's `to_h` doesn't return a hash deeply.
 
 ```ruby
 ## OpenStruct
@@ -62,9 +65,11 @@ sd_struct.to_h
 # :array=>[{:one=>1, :two=>2, :three=>3}], "two words"=>"Foo bar"}
 ```
 
-#### OpenStruct uses `method_missing` to create new field, while SDStruct prevent creation of new field with dot notation.
 
-SDStruct prevent creation of new field with dot notation once it is initialized
+> OpenStruct uses `method_missing` to create new field, while SDStruct prevent creation
+> of new field using dot notation.
+
+SDStruct prevent creation of new field using dot notation once it is initialized
 to prevent assigning unintended field when you mistyped the key/field. SDStruct
 is stricter in that way. However, SDStruct can also be lenient. You can use
 square brackets when you want to assign a new field.
@@ -91,7 +96,8 @@ sd_struct
 # .array=[#<SDStruct .one=1, .two=2, .three=3>], ['two words']="Foo bar", .book="title">
 ```
 
-#### OpenStruct doesn't have search or deep digging functionalities
+
+> OpenStruct doesn't have search or deep digging functionalities
 
 ```ruby
 sd_struct.find('object/a')
@@ -126,7 +132,8 @@ sd_struct.dig_deep(:one)
 # => 1
 ```
 
-#### SDStruct is suitable for building JSON request body
+
+> SDStruct is suitable for building JSON request body
 
 You can parse a default JSON file for request body, fill it in, and only send
 parts that are not empty.
@@ -154,6 +161,7 @@ Therefore, keys with those values are excluded from the generated JSON string.
 ```ruby
 sd_struct.to_json
 # => "{\"object\":{\"a\":\"bau bau\",\"c\":\"boo boo\"},\"array\":[{\"two\":2}]}"
+
 sd_struct.find('0').two = 0
 sd_struct.to_json
 # => "{\"object\":{\"a\":\"bau bau\",\"c\":\"boo boo\"}}"
@@ -162,10 +170,10 @@ sd_struct.to_json
 However, you can include them if you want to by removing them from `:values_to_exclude` option.
 
 ```ruby
-sd_struct.to_json values_to_exclude: [[""], [{}]]
+sd_struct.to_json values_to_exclude: [[""], [{}]] # default to [0, [""], [{}]]
 # => "{\"object\":{\"a\":\"bau bau\",\"c\":\"boo boo\"},\"array\":[{\"one\":0,\"two\":0,\"three\":0}]}"
 
-sd_struct.to_json values_to_exclude: [[""], [{}]], exclude_blank_values: false
+sd_struct.to_json values_to_exclude: [[""], [{}]], exclude_blank_values: false # default to true
 # => "{\"object\":{\"a\":\"bau bau\",\"c\":\"boo boo\"},\"array\":[{\"one\":0,\"two\":0,\"three\":0}],\"two words\":\"\"}"
 ```
 
@@ -190,7 +198,8 @@ Example of a Hash.
 }
 ```
 
-#### OpensStruct doesn't consume a hash deeply
+
+> OpensStruct doesn't consume a hash deeply
 
 ```ruby
 ## with OpenStruct
