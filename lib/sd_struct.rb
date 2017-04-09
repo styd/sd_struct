@@ -1,5 +1,10 @@
 require "sd_struct/version"
 
+
+# Alternative to OpenStruct that is more strict and go deeper.
+#
+# @author Adrian Setyadi
+#
 class SDStruct
   using Module.new {
     refine Hash do
@@ -15,6 +20,10 @@ class SDStruct
         map{|x| x.respond_to?(:to_h) ? x.to_h(camelize_keys) : x }
       end
 
+      # Call `to_struct` to an Array to go deeper or to a Hash to change it to SDStruct
+      #
+      # @return [Array<SDStruct,Object>] array of SDStruct or any other objects
+      #
       def to_struct
         map{|x| ( x.is_a?(Hash) || x.is_a?(Array) ) ? x.to_struct : x }
       end
