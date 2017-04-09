@@ -1,7 +1,7 @@
 # SDStruct
 
-An alternative to OpenStruct that is stricter in assigning values and deeper in
-consuming the passed Hash and transforming it back to Hash or JSON, equipped
+An alternative to OpenStruct that is more strict in assigning values and deeper
+in consuming the passed Hash and transforming it back to Hash or JSON, equipped
 with deep digging capabilities.
 
 ## Usage
@@ -237,6 +237,12 @@ And then execute:
 Or install it yourself as:
 
     $ gem install activesupport
+
+In your code:
+
+```ruby
+require 'active_support/all'
+```
 
 
 ## Installation

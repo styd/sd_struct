@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = SDStruct::VERSION
   spec.authors       = ["Adrian Setyadi"]
   spec.email         = ["a.styd@yahoo.com"]
-  spec.summary       = %q{Stricter and Deeper Struct}
-  spec.description   = %q{An alternative to OpenStruct that stricter in assigning values and deeper in
+  spec.summary       = %q{Strict and Deep Struct}
+  spec.description   = %q{An alternative to OpenStruct that more strict in assigning values and deeper in
 consuming the passed Hash and transforming it back to Hash or JSON, equipped
 with deep digging capabilities.}
   spec.homepage      = ""
@@ -20,7 +20,7 @@ with deep digging capabilities.}
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "activesupport", "~> 4", "> 4"
+  spec.add_runtime_dependency "activesupport", ">= 4.0"
 
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
