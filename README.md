@@ -48,6 +48,11 @@ sd_struct = JSON.parse(response.body, object_class: SDStruct)
 
 sd_struct["two words"]
 # => "Foo bar"
+
+# By the way, you can also use `send` method to access spaced key/field
+o_struct.send("two words")
+sd_struct.send("two words")
+# => "Foo bar"
 ```
 
 
@@ -260,6 +265,13 @@ And then execute:
 Or install it yourself as:
 
     $ gem install sd_struct
+
+If you're not using rails, you can choose to only require the minimal version
+that doesn't have deep search and deep convert capabilities.
+
+```ruby
+require 'sd_struct/base'
+```
 
 ## Contributing
 

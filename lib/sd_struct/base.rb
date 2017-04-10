@@ -46,7 +46,7 @@ class SDStruct
   end
 
   def new_member(name)
-    name = name.to_s.underscore.to_sym unless name[/\s+/] # contains whitespace
+    name = name.to_s.underscore.to_sym unless name[/^[A-Z]|\s+/]
     unless respond_to?(name)
       define_singleton_method(name) { @table[name] }
       define_singleton_method("#{name}=") { |x| @table[name] = x }
