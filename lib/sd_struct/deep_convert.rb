@@ -9,29 +9,29 @@ class SDStruct
     end
   }
 
-  def to_h(opt = {})
-    opt = {
+  def to_h(opts = {})
+    opts = {
       camelize_keys: false,
       exclude_blank_values: false,
       values_to_exclude: []
-    }.merge(opt)
+    }.merge(opts)
 
     @table.map do |k, v|
-      v = v.to_h(opt) if v.is_a?(self.class) || v.is_a?(Array)
-      k = k.to_s.camelize(:lower) if opt[:camelize_keys] && !k[/\s+/]
+      v = v.to_h(opts) if v.is_a?(self.class) || v.is_a?(Array)
+      k = k.to_s.camelize(:lower) if opts[:camelize_keys] && !k[/\s+/]
       [k, v]
     end.original_to_h
-       .select{|_,v| opt[:exclude_blank_values] ? v.present? : !v.nil? }
-       .select{|_,v| !v.in?(opt[:values_to_exclude]) }
+       .select{|_,v| opts[:exclude_blank_values] ? v.present? : !v.nil? }
+       .select{|_,v| !v.in?(opts[:values_to_exclude]) }
   end
 
-  def to_json(opt = {})
-    opt = {
+  def to_json(opts = {})
+    opts = {
       camelize_keys: true,
       exclude_blank_values: true,
       values_to_exclude: [0, [""], [{}]]
-    }.merge(opt)
+    }.merge(opts)
 
-    to_h(opt).to_json
+    to_h(opts).to_json
   end
 end

@@ -2,10 +2,12 @@ class SDStruct
   using Module.new {
     refine Array do
 
+      #
       # Dig deep into array until non-Array and non-Hash primitive data is found
       #
       # @param [Symbol] multiple symbols
       # @return [String,Integer,Float,Boolean,nil] first matched result
+      #
       def dig_deep(*args)
         full_args = args.dup
         parent_key = args.shift
@@ -29,10 +31,12 @@ class SDStruct
     end
   }
 
+  #
   # Dig deep into Hash until non-Array and non-Hash primitive data is found
   #
   # @param [Symbol] multiple symbols
   # @return [String,Integer,Float,Boolean,nil] first matched result
+  #
   def dig_deep(*args)
     full_args = args.dup
     parent_key = args.shift
@@ -55,20 +59,22 @@ class SDStruct
     return result
   end
 
+  #
   # Dig the content of @table which is a hash
   #
   # @param [Symbol] multiple symbols
   # @return [String,Integer,Float,Boolean,nil] first matched result
+  #
   def dig(*args)
     @table.dig(*args)
   end
 
-  def find(key_str, opt = {})
-    opt = {
+  def find(key_str, opts = {})
+    opts = {
       separator: "/"
-    }.merge(opt)
+    }.merge(opts)
 
-    args = key_str.split(opt[:separator])
+    args = key_str.split(opts[:separator])
                   .map do |x|
                     x.strip!
                     if !!(x =~ /\A[-+]?\d+\z/)
@@ -85,5 +91,4 @@ class SDStruct
     result = dig_deep(*args)
     return result
   end
-
 end
