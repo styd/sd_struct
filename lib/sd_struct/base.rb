@@ -43,11 +43,11 @@ class SDStruct
   #   p data # -> #<SDStruct .name="Matz", ['coding language']=:ruby, .age="old">
   #
   def initialize(hash = nil, deep = true)
+    @deep = deep
     @table = {}
     if hash
       hash.each_pair do |k, v|
-        v = v.to_struct if deep && ( v.is_a?(Hash) || v.is_a?(Array) )
-        @table[new_member(k)] = v
+        @table[new_struct_member(k)] = structurize(v) # @deep is used in this method
       end
     end
   end
@@ -71,8 +71,7 @@ class SDStruct
   # Provides marshalling support for use by the Marshal library.
   #
   def marshal_load(x)
-    @table = x.map{|a| ( a.is_a?(Hash) || a.is_a?(Array) ) ? a.to_struct : a }
-              .original_to_h
+    @table = x.map{|a| structurize(a) }.original_to_h
   end
 
   #
@@ -92,7 +91,7 @@ class SDStruct
   #
   # Used internally to define field properties
   #
-  def new_member(name)
+  def new_struct_member(name)
     name = name.to_s.underscore.to_sym unless name[/^[A-Z]|\s+/]
     unless respond_to?(name)
       define_singleton_method(name) { @table[name] }
@@ -100,7 +99,16 @@ class SDStruct
     end
     name
   end
-  protected :new_member
+
+  #
+  # Call to struct to a value if it is an Array or a Hash and @deep is true
+  #
+  def structurize(value)
+    ( @deep && (value.is_a?(Hash) || value.is_a?(Array)) ) ? value.to_struct : value
+  end
+
+  protected :new_struct_member, :structurize
+
 
   #
   # Returns the value of a member.
@@ -123,7 +131,7 @@ class SDStruct
     unless self.[](name).nil? || value.is_a?(self.[](name).class)
       warn("You're assigning a value with different type as the previous value.")
     end
-    @table[new_member(name)] = value
+    @table[new_struct_member(name)] = structurize(value)
   end
 
   InspectKey = :__inspect_key__ # :nodoc:

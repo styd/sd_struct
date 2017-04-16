@@ -220,8 +220,9 @@ sd_struct = SDStruct.new(hash)
 
 ## Reserved Field Names
 
-`delete_field`, `delete_key`, `dig`, `dig_deep`, `fields`, `find`, `keys`, `marshal_dump`,
-`marshal_load`, `new_member`, `non_spaced_keys`, `spaced_keys`, `table`, `to_h`
+`delete_field`, `delete_key`, `dig`, `dig_deep`, `each_pair`, `fields`, `find`,
+`keys`, `marshal_dump`, `marshal_load`, `new_struct_member`, `non_spaced_keys`,
+`spaced_keys`, `structurize`, `table`, `to_h`, `to_json`
 
 ## Dependencies
 
