@@ -35,7 +35,7 @@ class SDStruct
   # Dig deep into Hash until non-Array and non-Hash primitive data is found
   #
   # @param [Symbol] multiple symbols
-  # @return [String,Integer,Float,Boolean,nil] first matched result
+  # @return [SDStruct,Hash,Array,String,Integer,Float,Boolean,nil] first matched result
   #
   def dig_deep(*args)
     full_args = args.dup
@@ -63,7 +63,7 @@ class SDStruct
   # Dig the content of @table which is a hash
   #
   # @param [Symbol] multiple symbols
-  # @return [String,Integer,Float,Boolean,nil] first matched result
+  # @return [SDStruct,Hash,Array,String,Integer,Float,Boolean,nil] first matched result
   #
   def dig(*args)
     @table.dig(*args)
@@ -74,21 +74,39 @@ class SDStruct
       separator: "/"
     }.merge(opts)
 
-    args = key_str.split(opts[:separator])
-                  .map do |x|
-                    x.strip!
-                    if !!(x =~ /\A[-+]?\d+\z/)
-                      x.to_i
-                    else
-                      if x[/\s+/]
-                        x
-                      else
-                        x.underscore.to_sym
-                      end
-                    end
-                  end
+    sep = Regexp.quote(opts[:separator])
 
-    result = dig_deep(*args)
+    args = begin
+      key_str.gsub(/^#{sep}(?!#{sep})|#{sep}+$/, '')
+             .split(/#{sep}{2,}/)
+             .map do |ks|
+               ks.split(/#{sep}/)
+                 .map do |x|
+                   x.strip!
+                   if !!x[/\A[-+]?\d+\z/]
+                     x.to_i
+                   else
+                     if x[/^$|\s+/]
+                       x
+                     else
+                       x.underscore.to_sym
+                     end
+                   end
+                 end
+             end
+    end
+
+    if !(parent_key = args.shift) # args == [], key_str == ""
+      return
+    else # e.g. args == [[], ..] or [[.., ..], [..]]
+      result = dig(*parent_key) unless parent_key.empty?
+
+      unless args.length.zero?
+        args.each do |a|
+          result = result.dig_deep(*a) rescue result = dig_deep(*a)
+        end
+      end
+    end
     return result
   end
 end

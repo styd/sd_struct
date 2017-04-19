@@ -108,26 +108,26 @@ sd_struct
 sd_struct.find('object/a')
 # => "bau bau"
 
-sd_struct.find('array/0/one')
+sd_struct.find('/array/0/one')
 # => 1
 
 sd_struct.find('object->a', separator: '->')
 # => "bau bau"
 
-sd_struct.find('array.0.one', separator: '.')
+sd_struct.find('.array..one', separator: '.')
 # => 1
 
 # You can push it to find deeper. It will return the first occurrence of the matched field
-sd_struct.find('a')
+sd_struct.find('//a')
 # => "bau bau"
 
-sd_struct.find('0/one')
+sd_struct.find('//0/one')
 # => 1
 
-sd_struct.find('one')
+sd_struct.find('//one')
 # => 1
 
-sd_struct.find('four')
+sd_struct.find('//four')
 # => nil
 
 sd_struct.dig_deep(0, :one)
@@ -152,8 +152,8 @@ sd_struct
 # => #<SDStruct .object=#<SDStruct .a="bau bau", .c="boo boo">,
 # .array=[#<SDStruct .one=1, .two=2, .three=3>], ['two words']="Foo bar">
 
-sd_struct.find('0').one = 0
-sd_struct.find('0').three = 0
+sd_struct.find('//0').one = 0
+sd_struct.find('//0').three = 0
 sd_struct['two words'] = ""
 sd_struct
 # => #<SDStruct .object=#<SDStruct .a="bau bau", .c="boo boo">,
@@ -167,7 +167,7 @@ Therefore, keys with those values are excluded from the generated JSON string.
 sd_struct.to_json
 # => "{\"object\":{\"a\":\"bau bau\",\"c\":\"boo boo\"},\"array\":[{\"two\":2}]}"
 
-sd_struct.find('0').two = 0
+sd_struct.find('///0').two = 0
 sd_struct.to_json
 # => "{\"object\":{\"a\":\"bau bau\",\"c\":\"boo boo\"}}"
 ```
