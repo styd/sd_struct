@@ -71,13 +71,13 @@ sd_struct.to_h
 ```
 
 
-> OpenStruct uses `method_missing` to create new field, while SDStruct prevent creation
-> of new field using dot notation.
+> OpenStruct allows creation of a new field with dot notation while SDStruct
+> prevents it
 
-SDStruct prevent creation of new field using dot notation once it is initialized
-to prevent assigning unintended field when you mistyped the key/field. SDStruct
-is stricter in that way. However, SDStruct can also be lenient. You can use
-square brackets when you want to assign a new field.
+SDStruct disallows creation of a new field using dot notation to prevent
+assigning unintended field when you mistyped the key/field. SDStruct is
+stricter in that way. However, SDStruct can also be lenient. You can use square
+brackets when you want to assign a new field.
 
 ```ruby
 ## OpenStruct
@@ -114,10 +114,10 @@ sd_struct.find('/array/0/one')
 sd_struct.find('object->a', separator: '->')
 # => "bau bau"
 
+# You can push it to find deeper. It will return the first occurrence of the matched field
 sd_struct.find('.array..one', separator: '.')
 # => 1
 
-# You can push it to find deeper. It will return the first occurrence of the matched field
 sd_struct.find('//a')
 # => "bau bau"
 
@@ -273,6 +273,14 @@ that doesn't have deep search and deep convert capabilities.
 ```ruby
 require 'sd_struct/base'
 ```
+
+
+## TODO
+
+  * Add `method_missing` to define singleton method when a field/member/key is
+    called (and not during initialization) to execute initialization faster
+  * Reimplement SDStruct to extend Hash (possibly will make it faster)
+
 
 ## Contributing
 

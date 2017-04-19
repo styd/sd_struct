@@ -6,7 +6,7 @@ class SDStruct
   using Module.new {
     refine Hash do
       #
-      # Change current Hash object to SDStruct object
+      # Changes current Hash object to SDStruct object
       #
       # @return [SDStruct] SDStruct object
       #
@@ -18,7 +18,7 @@ class SDStruct
     refine Array do
 
       #
-      # Call `to_struct` to an Array to go deeper or to a Hash to change it to SDStruct
+      # Calls `to_struct` to an Array to go deeper or to a Hash to change it to SDStruct
       #
       # @return [Array<SDStruct,Object>] array of SDStruct or any other objects
       #
@@ -53,7 +53,7 @@ class SDStruct
   end
 
   #
-  # Duplicate an SDStruct object members.
+  # Duplicates an SDStruct object members.
   #
   def initialize_copy(orig)
     super
@@ -101,7 +101,7 @@ class SDStruct
   end
 
   #
-  # Call to struct to a value if it is an Array or a Hash and @deep is true
+  # Calls to struct to a value if it is an Array or a Hash and @deep is true
   #
   def structurize(value)
     ( @deep && (value.is_a?(Hash) || value.is_a?(Array)) ) ? value.to_struct : value
@@ -128,7 +128,7 @@ class SDStruct
   #   person.lang # => ruby
   #
   def []=(name, value)
-    unless self.[](name).nil? || value.is_a?(self.[](name).class)
+    unless self[name].nil? || value.is_a?(self[name].class)
       warn("You're assigning a value with different type as the previous value.")
     end
     @table[new_struct_member(name)] = structurize(value)
@@ -181,7 +181,7 @@ class SDStruct
   end
 
   #
-  # Compute a hash-code for this SDStruct.
+  # Computes a hash-code for this SDStruct.
   # Two hashes with the same content will have the same hash code
   # (and will be eql?).
   #
@@ -190,14 +190,14 @@ class SDStruct
   end
 
   #
-  # Expose keys with space(s)
+  # Exposes keys with space(s)
   #
   def spaced_keys
     @table.keys - non_spaced_keys
   end
 
   #
-  # Expose keys without space(s)
+  # Exposes keys without space(s)
   #
   def non_spaced_keys
     methods(false).select{|x| x[/^\S+[^=]$/]}
@@ -205,14 +205,14 @@ class SDStruct
   alias :fields :non_spaced_keys
 
   #
-  # Expose all keys
+  # Exposes all keys
   #
   def keys
     @table.keys
   end
 
   #
-  # Delete specified field or key
+  # Deletes specified field or key
   #
   def delete_field(name)
     sym = name.to_sym

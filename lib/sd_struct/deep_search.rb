@@ -3,7 +3,7 @@ class SDStruct
     refine Array do
 
       #
-      # Dig deep into array until non-Array and non-Hash primitive data is found
+      # Digs deep into array until non-Array and non-Hash primitive data is found
       #
       # @param [Symbol] multiple symbols
       # @return [String,Integer,Float,Boolean,nil] first matched result
@@ -32,7 +32,7 @@ class SDStruct
   }
 
   #
-  # Dig deep into Hash until non-Array and non-Hash primitive data is found
+  # Digs deep into Hash until non-Array and non-Hash primitive data is found
   #
   # @param [Symbol] multiple symbols
   # @return [SDStruct,Hash,Array,String,Integer,Float,Boolean,nil] first matched result
@@ -60,7 +60,7 @@ class SDStruct
   end
 
   #
-  # Dig the content of @table which is a hash
+  # Digs the content of @table which is a hash
   #
   # @param [Symbol] multiple symbols
   # @return [SDStruct,Hash,Array,String,Integer,Float,Boolean,nil] first matched result
@@ -69,6 +69,13 @@ class SDStruct
     @table.dig(*args)
   end
 
+  #
+  # Finds value with keys specified like xpath
+  #
+  # @param [String] key string
+  # @param [Hash] option Hash
+  # @return [SDStruct,Hash,Array,String,Integer,Float,Boolean,nil] first matched result
+  #
   def find(key_str, opts = {})
     opts = {
       separator: "/"
