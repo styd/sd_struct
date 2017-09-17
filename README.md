@@ -274,6 +274,10 @@ that doesn't have deep search and deep convert capabilities.
 require 'sd_struct/base'
 ```
 
+## Attribution
+
+OpenStruct is used as the base of this project.
+
 
 ## TODO
 
