@@ -16,7 +16,6 @@ class SDStruct
     end
 
     refine Array do
-
       #
       # Calls `to_struct` to an Array to go deeper or to a Hash to change it to SDStruct
       #
@@ -42,12 +41,17 @@ class SDStruct
   #
   #   p data # -> #<SDStruct .name="Matz", ['coding language']=:ruby, .age="old">
   #
-  def initialize(hash = nil, deep = true)
-    @deep = deep
+  def initialize(hash = nil, opts = {})
+    opts = {
+      deep:           true,
+      symbolize_keys: true
+    }.merge(opts)
+
+    @deep = opts[:deep]
     @table = {}
     if hash
       hash.each_pair do |k, v|
-        @table[new_struct_member(k)] = structurize(v) # @deep is used in this method
+        @table[naturalize(k)] = structurize(v) # @deep is used in this method
       end
     end
   end
@@ -92,12 +96,19 @@ class SDStruct
   # Used internally to define field properties
   #
   def new_struct_member(name)
-    name = name.to_s.underscore.to_sym unless name[/^[A-Z]|\s+/]
     unless respond_to?(name)
       define_singleton_method(name) { @table[name] }
       define_singleton_method("#{name}=") { |x| @table[name] = x }
     end
     name
+  end
+
+  def naturalize(key)
+    unless key[/^[A-Z]|\s+/]
+      key.to_s.underscore.to_sym
+    else
+      key
+    end
   end
 
   #
@@ -107,7 +118,7 @@ class SDStruct
     ( @deep && (value.is_a?(Hash) || value.is_a?(Array)) ) ? value.to_struct : value
   end
 
-  protected :new_struct_member, :structurize
+  protected :new_struct_member, :naturalize, :structurize
 
 
   #
@@ -117,7 +128,7 @@ class SDStruct
   #   person[:lang] # => ruby, same as person.lang
   #
   def [](name)
-    @table.has_key?(name) ? @table[name] : @table[name.to_s.underscore.to_sym]
+    @table[name] || @table[naturalize(name)]
   end
 
   #
@@ -131,10 +142,8 @@ class SDStruct
     unless self[name].nil? || value.is_a?(self[name].class)
       warn("You're assigning a value with different type as the previous value.")
     end
-    @table[new_struct_member(name)] = structurize(value)
+    @table[new_struct_member(naturalize(name))] = structurize(value)
   end
-
-  InspectKey = :__inspect_key__ # :nodoc:
 
   #
   # Returns a string containing a detailed summary of the keys and values.
@@ -142,7 +151,7 @@ class SDStruct
   def inspect
     str = "#<#{self.class}"
 
-    ids = (Thread.current[InspectKey] ||= [])
+    ids = (Thread.current[:sd_struct] ||= [])
     if ids.include?(object_id)
       return str << ' ...>'
     end
@@ -215,11 +224,24 @@ class SDStruct
   # Deletes specified field or key
   #
   def delete_field(name)
-    sym = name.to_sym
-    @table.delete(sym) do
-      raise NameError.new("no field `#{sym}' in #{self}", sym)
+    name = @table.has_key?(name) ? name : naturalize(name)
+    @table.delete(name) do
+      raise NameError.new("no field `#{name}' in #{self}", name)
     end
-    singleton_class.__send__(:remove_method, sym, "#{sym}=")
+    singleton_class.__send__(:remove_method, name, "#{name}=")
   end
   alias :delete_key :delete_field
+
+  def method_missing(m_id, *args)
+    m_nat = naturalize(m_id)
+    if args.length.zero?
+      if @table.key?(m_nat)
+        @table[new_struct_member(m_nat)]
+      end
+    else
+      err = NoMethodError.new "undefined method `#{m_id}' for #{self}", m_id, args
+      err.set_backtrace caller(1)
+      raise err
+    end
+  end
 end

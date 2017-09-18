@@ -281,6 +281,7 @@ OpenStruct is used as the base of this project.
 
 ## TODO
 
+  * Add specs
   * Add `method_missing` to define singleton method when a field/member/key is
     called (and not during initialization) to execute initialization faster
   * Reimplement SDStruct to extend Hash (possibly will make it faster)

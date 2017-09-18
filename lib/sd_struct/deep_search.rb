@@ -93,7 +93,7 @@ class SDStruct
                    if !!x[/\A[-+]?\d+\z/]
                      x.to_i
                    else
-                     if x[/^$|\s+/]
+                     if x[/^$|^[A-Z]|\s+/]
                        x
                      else
                        x.underscore.to_sym
