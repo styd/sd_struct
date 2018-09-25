@@ -1,0 +1,7 @@
+require 'benchmark/ips'
+require 'ostruct'
+require 'hashugar'
+require 'hashie/mash'
+require 'hashr'
+require 'finer_struct'
+require 'sd_struct'
