@@ -5,7 +5,7 @@ require "sd_struct/searchable_deep"
 # @author Adrian Setyadi
 #
 class SdStruct
-  VERSION = "0.2.0"
+  VERSION = "0.3.0"
 
   using SearchableDeep
 
